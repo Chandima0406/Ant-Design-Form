@@ -40,6 +40,7 @@ function App() {
           label="Full Name"
           name="fullname"
           rules={[{ required: true, message: 'Please input your full name!' }]}
+          hasFeedback
         >
           <Input placeholder="Enter your full name" />
         </Form.Item>
@@ -51,6 +52,7 @@ function App() {
             { required: true, message: 'Please input your email!' },
             { type: 'email', message: 'Please enter a valid email!' }
           ]}
+          hasFeedback
         >
           <Input placeholder="Enter your email" />
         </Form.Item>
@@ -62,6 +64,7 @@ function App() {
             { required: true, message: 'Please input your password!' },
             { min: 6, message: 'Password must be at least 6 characters!' }
           ]}
+          hasFeedback
         >
           <Input.Password placeholder="Enter your password" />
         </Form.Item>
@@ -81,6 +84,7 @@ function App() {
               },
             }),
           ]}
+          hasFeedback
         >
           <Input.Password placeholder="Confirm your password" />
         </Form.Item>
@@ -89,6 +93,7 @@ function App() {
           label="Gender"
           name="gender"
           rules={[{ required: true, message: 'Please select your gender!' }]}
+          hasFeedback
         >
           <Select placeholder="Select your gender">
             <Select.Option value="male">Male</Select.Option>
@@ -100,6 +105,7 @@ function App() {
           label="Date of Birth"
           name="dateOfBirth"
           rules={[{ required: true, message: 'Please select your date of birth!' }]}
+          hasFeedback
         >
           <DatePicker style={{ width: '100%' }} placeholder="Select your date of birth" />
         </Form.Item>
@@ -111,6 +117,7 @@ function App() {
             { type: 'url', message: 'Please enter a valid URL!' },
             { required: false }
           ]}
+          hasFeedback
         >
           <Input placeholder="Enter your website (optional)" />
         </Form.Item>
