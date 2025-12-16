@@ -1,35 +1,142 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Form, Input, Button, Select, DatePicker, Checkbox } from 'antd';
+import type { FormProps } from 'antd';
+import type { Dayjs } from 'dayjs';
+import './App.css';
+
+type FieldType = {
+  fullname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+  dateOfBirth: Dayjs | null;
+  website: string;
+  agreeToTerms: boolean;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [form] = Form.useForm();
+
+  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+    console.log('Success:', values);
+    // Handle form submission here
+  };
+
+  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ maxWidth: 600, margin: '50px auto', padding: '40px', background: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', color: 'black' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Registration Form</h1>
+      <Form
+        form={form}
+        name="registration"
+        layout="vertical"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item<FieldType>
+          label="Full Name"
+          name="fullname"
+          rules={[{ required: true, message: 'Please input your full name!' }]}
+        >
+          <Input placeholder="Enter your full name" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Please enter a valid email!' }
+          ]}
+        >
+          <Input placeholder="Enter your email" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Password"
+          name="password"
+          rules={[
+            { required: true, message: 'Please input your password!' },
+            { min: 6, message: 'Password must be at least 6 characters!' }
+          ]}
+        >
+          <Input.Password placeholder="Enter your password" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Confirm Password"
+          name="confirmPassword"
+          dependencies={['password']}
+          rules={[
+            { required: true, message: 'Please confirm your password!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The passwords do not match!'));
+              },
+            }),
+          ]}
+        >
+          <Input.Password placeholder="Confirm your password" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Gender"
+          name="gender"
+          rules={[{ required: true, message: 'Please select your gender!' }]}
+        >
+          <Select placeholder="Select your gender">
+            <Select.Option value="male">Male</Select.Option>
+            <Select.Option value="female">Female</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Date of Birth"
+          name="dateOfBirth"
+          rules={[{ required: true, message: 'Please select your date of birth!' }]}
+        >
+          <DatePicker style={{ width: '100%' }} placeholder="Select your date of birth" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Website"
+          name="website"
+          rules={[
+            { type: 'url', message: 'Please enter a valid URL!' },
+            { required: false }
+          ]}
+        >
+          <Input placeholder="Enter your website (optional)" />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          name="agreeToTerms"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                value ? Promise.resolve() : Promise.reject(new Error('You must agree to the terms and conditions!')),
+            },
+          ]}
+        >
+          <Checkbox>I agree to the terms and conditions</Checkbox>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
+  );
 }
 
-export default App
+export default App;
